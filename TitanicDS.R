@@ -71,17 +71,32 @@ for (i in 1:nrow(data.combined)){
 }
 data.combined$title <- as.factor(title)
 
-#Train dataset work
+#Train dataset work: If you are MR and in class 3 then probably you will not survive.
 ggplot(data.combined[1:891,], aes(x=title, fill=Survived)) + stat_count(width = 0.5) + facet_wrap(~Pclass)
 
+#Visualiation indicating males are likely to perish
+ggplot(data.combined[1:891,], aes(x=Sex, fill=Survived)) + stat_count(width = 0.5)
+ggplot(data.combined[1:891,], aes(x=Sex, fill=Survived)) + stat_count(width = 0.5) + facet_wrap(~Pclass) + ggtitle('Pclass') + 
+  ylab('Total Count')
 
+#Messy plot indicating that most of males from 15-40 years of age did not survive also all the females which were 20 years old did not survive. 
+ggplot(data.combined[1:891,], aes(x=Age, fill=Survived)) + geom_bar(width = 0.5) + facet_wrap(~Sex)
+  ylab('Total Count')
 
+#Plot indicating that most of females of class 1 and 2 survived while most of the males of class 2 and 3 perished 
+ggplot(data.combined[1:891,], aes(x=Age, fill=Survived)) + geom_bar(width=1) + facet_wrap(~Sex+Pclass)
+ylab('Total Count')  
+  
+#Indicating that around 263 values were missing- around 8 missing values in master and 50 missing values in Miss.
+summary(data.combined$Age)
+boys <- data.combined[which(data.combined$title == 'Master.'),]
+summary(boys$Age)
+ladies <- data.combined[which(data.combined$title == 'Miss.'),]
+summary(ladies$Age)
 
-
-
-
-
-
+#plot indicating the survival rate of misses with respect to age
+ggplot(ladies[ladies$Survived != 'None',], aes(x=Age,fill=Survived)) + geom_bar(width = 1) +facet_wrap(~Pclass) + 
+  ggtitle('Female with Miss title survival ')
 
 
 
