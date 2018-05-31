@@ -81,7 +81,7 @@ ggplot(data.combined[1:891,], aes(x=Sex, fill=Survived)) + stat_count(width = 0.
 
 #Messy plot indicating that most of males from 15-40 years of age did not survive also all the females which were 20 years old did not survive. 
 ggplot(data.combined[1:891,], aes(x=Age, fill=Survived)) + geom_bar(width = 0.5) + facet_wrap(~Sex)
-  ylab('Total Count')
+  ylab('Total Count')s
 
 #Plot indicating that most of females of class 1 and 2 survived while most of the males of class 2 and 3 perished 
 ggplot(data.combined[1:891,], aes(x=Age, fill=Survived)) + geom_bar(width=1) + facet_wrap(~Sex+Pclass)
@@ -98,6 +98,24 @@ summary(ladies$Age)
 ggplot(ladies[ladies$Survived != 'None',], aes(x=Age,fill=Survived)) + geom_bar(width = 1) +facet_wrap(~Pclass) + 
   ggtitle('Female with Miss title survival ')
 
+#plot indicating the survival rate of Master with respect to age
+ggplot(boys[boys$Survived != 'None',], aes(x=Age,fill=Survived)) + geom_bar(width = 1) +facet_wrap(~Pclass) + 
+  ggtitle('Female with Miss title survival ')
 
+str(data.combined$Cabin)
 
+#checking survival based on the cabin class and substituting all the null cabin records with class "U"
+data.combined$Cabin <- as.character(data.combined$Cabin)
+data.combined$Cabin[1:100]
+data.combined[which(data.combined$Cabin == ""), 'Cabin'] <- "U"
 
+Cabin.first.char <- as.factor(substr(data.combined$Cabin,1,1))
+str(Cabin.first.char)
+levels(Cabin.first.char)
+data.combined$Cabin.first.char <- Cabin.first.char
+data.combined$Cabin.first.char[1:100]
+
+#Plot says that cabin class B mostly survives
+ggplot(data.combined[1:891,], aes(x = Cabin.first.char, fill=Survived)) + geom_bar() + labs(fill='Survived') + 
+  ggtitle('Survival based on the Cabin class')
+ 
