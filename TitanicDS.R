@@ -103,6 +103,60 @@ ggplot(boys[boys$Survived != 'None',], aes(x=Age,fill=Survived)) + geom_bar(widt
   ggtitle('Female with Miss title survival ')
 
 str(data.combined$Cabin)
+length(unique(data.combined$SibSp))
+
+data.combined$SibSp <- as.factor(data.combined$SibSp)
+
+#Plot to determine anything interesting between SibSb, Pclass title and survival
+ggplot(data.combined[1:891,], aes(x=SibSp,fill=Survived)) + geom_bar(width = 1) +facet_wrap(~Pclass+title) + 
+  ggtitle('Sibsp with Pclass and title survival ')
+# WE discovered a lot of time that if you are a male travelling in class 3 and also also have no
+# have no siblings and also if you are teavelling with large family then too.
+
+data.combined$Parch <- as.factor(data.combined$Parch)
+ggplot(data.combined[1:891,], aes(x=Parch,fill=Survived)) + geom_bar(width = 1) +facet_wrap(~Pclass+title) + 
+  ggtitle('Sibsp with Pclass and title survival ')
+
+#Check for survival bsed on family size
+temp.sibsp = c(train$SibSp, test$SibSp)
+temp.parch = c(train$Parch, test$Parch)
+data.combined$familysize = as.factor(temp.sibsp + temp.parch + 1)
+ggplot(data.combined[1:891,], aes(x=familysize,fill=Survived)) + geom_bar(width = 1) +facet_wrap(~Pclass+title) + 
+  ggtitle('FamilySize with Pclass and title survival ')
+# Male with pclass 3 might have some chance of survival if they are travelling alone
+
+#---------------- Some analysis on ticket numbers from the dataset------------------------
+str(data.combined$Ticket)
+data.combined$Ticket = as.character(data.combined$Ticket)
+
+data.combined$Ticket[1:20]
+data.combined$TicFirstChar <- ifelse(data.combined$Ticket == "", " ", substr(data.combined$Ticket,1,1))
+unique(data.combined$TicFirstChar)
+
+data.combined$TicFirstChar <- as.factor(data.combined$TicFirstChar)
+str(data.combined$TicFirstChar)
+
+table(data.combined$TicFirstChar)
+#plot to show relation between ticket numbers and survival
+ggplot(data.combined[1:891,], aes(x=TicFirstChar,fill=Survived)) + stat_count(width = 0.5) + 
+  ggtitle('Relation between Tickets and Survival') + ylab('Count')
+
+#People who are in Pclass 3 and have ticket number starting with 3 all survived.
+ggplot(data.combined[1:891,], aes(x=TicFirstChar,fill=Survived)) + geom_bar(width = 0.5) + facet_wrap(~Pclass) +
+    ggtitle('Relation between Tickets, Pclass & Survival') + ylab('Count') + ylim(0,150) + 
+    labs(fill = 'Survived')
+
+ggplot(data.combined[1:891,], aes(x=TicFirstChar,fill=Survived)) + geom_bar(width = 0.5) + facet_wrap(~Pclass+title) +
+  ggtitle('Relation between Tickets, Pclass & Survival') + ylab('Count') + ylim(0,200) + 
+  labs(fill = 'Survived')
+
+#------------------------------Analysis on Fare of tickets------------------------------------
+str(data.combined$Fare)
+summary(data.combined$Fare)
+
+ggplot(data.combined[1:891,],aes(x=Fare,fill=Survived)) + geom_histogram(binwidth=5) +
+  facet_wrap(~Pclass)
+
 
 #checking survival based on the cabin class and substituting all the null cabin records with class "U"
 data.combined$Cabin <- as.character(data.combined$Cabin)
